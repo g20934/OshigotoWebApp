@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <!--参考にさせていただいたサイト集
+      ・firebase https://github.com/hackujp/firebase_tutorial
+        firebase Authentication https://firebase.google.com/docs/auth/web/firebaseui?hl=ja
+      ・サイドバー https://codeprep.jp/books/97 (紫)  https://codepen.io/ashrobbins/pen/HhFBr (左から出てくる機能)
+      ・Trello https://paiza.hatenablog.com/entry/2018/04/19/JavaScript%E3%81%A0%E3%81%91%E3%81%A7Trello%E9%A2%A8%E3%82%BF%E3%82%B9%E3%82%AF%E7%AE%A1%E7%90%86%E3%83%9C%E3%83%BC%E3%83%89%E3%82%92%E9%96%8B%E7%99%BA%E3%81%A7%E3%81%8D%E3%82%8B%E3%83%A9%E3%82%A4
+        (公式github)https://github.com/riktar/jkanban
+      ・タイマー https://www.pazru.net/js/timer/6.html
+      ・ストップウォッチ　https://qiita.com/ryomaDsakamoto/items/c49a9d4cd2017405af1b
+      ・1行テキストボックス　http://www.htmq.com/html5/input_type_text.shtml
+      ・2タブ https://sdesignlabo.com/web/tabmenu/
+      (・ハンバーガーメニュー(まだ実装していない)　https://shibajuku.net/make-hamburger-button/)
+  -->
+
+  <head>
+    <meta charset="UTF-8">
+    <link rel = "stylesheet" href = "./style_index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Klee+One&display=swap" rel="stylesheet">
+
+
+    <!-- モバイルブラウザでのレイアウトを制御する。参考 https://qiita.com/ryounagaoka/items/045b2808a5ed43f96607 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="icon.ico">
+
+    <title>個人ページ</title>
+
+    <!--firebaseやjQuery, cssなどを読み込む-->
+    <link rel="stylesheet" href="jkanban-master/dist/jkanban.min.css">
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+
+    <!-- タブ関係の読み込み -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ropa+Sans">
+    <script src="./js/vendor/modernizr.custom.min.js"></script>
+    <script src="./js/vendor/jquery-1.10.2.min.js"></script>
+    <script src="./js/main.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+  </head>
+
+  <body>
+    <div class = "contents">
+      <!--メニューバー-->
+      <nav id="pushLeft">
+        <ul　class = "menu">
+          <li class="menu-item">
+            <i class="fa fa-list-ul" aria-hidden="true"></i><b class = "menuTitle">チャンネル一覧</b>
+          </li>
+
+          <li class="menu-item">
+            <a href = "channel1.html">
+              <i class="fa fa-comments" aria-hidden="true"></i><ol id="list0"><p class = "menuName">wait...</p></ol>
+            </a>
+          </li>
+
+          <li class="menu-item">
+            <a href = "channel2.html">
+              <i class="fa fa-user" aria-hidden="true"></i><ol id="list1"><p class = "menuName">wait...</p></ol>
+            </a>
+          </li>
+
+          <li class="menu-item">
+            <a href = "channel3.html">
+              <i class="fa fa-question-circle" aria-hidden="true"></i><ol id="list2"><p class = "menuName">wait...</p></ol>
+            </a>
+          </li>
+
+          <li>
+            <button type = "button" class ="channelplus">＋</button>
+            チャンネル追加
+            <form method = "post">
+              <input type="text" id = "channelName">
+              <button onclick="doAction();" class = "addchannel">Add</button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+
+      <!--メニューバー以外の部分-->
+      <!--メニューバーが開閉する機能-->
+      <div class="container">
+        <div class="containerOverlay">
+          <a href="#"></a>
+        </div>
+
+      <header>
+        <p class = "titleImage">
+          <img src = "red_header.png" alt = "オシゴトのアイコン"/>
+        </p>
+        <div class="headlineName" id = "authUserName">wait...</div>
+
+        <img class="headlineImage" id="authImage_place" src="" alt = "">
+
+        <a href="#pushLeft" class="pushIn">チャンネルへ</a>
+
+        <button type = "button" onclick="location.href='index.html', signOut()" class = "button logout">ログアウト</button><!--ボタンを押すとindex.htmlへ行き、サインアウトする。ボタンをヘッダーへ後でやる-->
+      </header>
+
+
+      <!-- タブ -->
+      <div class="tab_container">
+      <input id="tab1" type="radio" name="tab_item" checked>
+      <label class="tab_item" for="tab1">お仕事</label>
+      <input id="tab2" type="radio" name="tab_item">
+      <label class="tab_item" for="tab2">推し事</label>
+      <input id="tab3" type="radio" name="tab_item">
+      <label class="tab_item" for="tab3">設定</label>
+
+      <!-- タブ1枚目　-->
+      <div class="tab_content" id="tab1_content">
+        <div class="tab_content_description">
+          <p class="c-txtsp">
+            <div class = "main">
+              <div class ="wrapper">
+                <!--ストップウォッチ-->
+                <section class ="stopwatch">
+                  <h1 class = "namestop">ストップウォッチ</h1>
+                  <div class="stoptimer" id = "stoptimer">00:00:000</div>
+                  <button class="watch start" id = "stopstart"><div class = "stopbotton">start</div></button>
+                  <button class="watch stop" id = "stopstop"><div class = "stopbotton">stop</div></button>
+                  <button class="watch reset" id = "stopreset"><div class = "stopbotton">reset</div></button>
+                </section>
+
+                <!--タイマ--->
+                <section class = "timersection">
+                  <h1 class = "nametimer">タイマー</h1>
+                  <form name="timer">
+                    <input type="text" value="" class="timerms">分
+                    <input type="text" value="" class="timerms">秒<br>
+                    <input type="button" value="start" onclick="cntStart()" class = "timekeeper tStart">
+                    <input type="button" value="stop" onclick="cntStop()"class = "timekeeper tStop">
+                  </form>
+
+                  <div id="myModal" class="modal">
+                    <div class="modal-content">
+                      <span class="close">&times;</span>
+                      <p>残り5分です！</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <!--カレンダー-->
+              <div class = "wrapperbottom">
+                <section class = "contentA">
+                  <h1 class = "calender">カレンダー</h1>
+                  <iframe src= "" id = "id_ifrem1" width="100%" height="100%" frameborder="0" scrolling="yes"></iframe>
+                </section>
+
+                <!--ToDo-->
+                <section class = "contentB" style = "margin-left:25px">
+                  <h1 class = "todolist">やることリスト</h1>
+                  <div id="myKanban"></div>
+                  <ol id="message1">タスクの状態が<span style= "color : #Bf2a48;">「作業中」</span>もしくは<span style = "color: #bfa12a">「終了」</span>になると、推しからのメッセージが表示されるよ！</ol>
+                  <div class="balloon5">
+                    <div class="faceicon">
+                      <img id="image_place" src="" class = "fade" alt = "">
+                    </div>
+                    <div class="chatting">
+                      <div class="says">
+                        <ol id = "message"><ol>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!--タブ2枚目-->
+      <div class="tab_content" id="tab2_content">
+        <div class="tab2container">
+          <!--スライドショー-->
+          <div class = "oshishow">
+            <div class ="showup">
+            <p class = "showtitle"><b><span class = "oshigoto">オシゴト</span>癒しスライドショー</b></p>
+            </div>
+            <ul class="slider">
+              <li><img id = "slide1" src="" alt="1"></li>
+              <li><img id = "slide2" src="" alt="2"></li>
+              <li><img id = "slide3" src="" alt="3"></li>
+              <li><img id = "slide4" src="" alt="4"></li>
+              <li><img id = "slide5" src="" alt="5"></li>
+              <li><img id = "slide6" src="" alt="6"></li>
+            </ul>
+          </div>
+
+          <div class = "evevtadd">
+          <p class = "showtitle"><b><span class = "oshigoto">オシゴト</span>予定</b></p>
+            <div id="form">
+            <form method = "post">
+              <p><label><p class = "eventmei">イベント名: </p><input type="text" id = "eventName"></label></p>
+              <p><label><div class = "eventday">日付: </div><input type="date" id = "eventDate"></label></p>
+              <button onclick="doActionEvent()" class = "soushin">送信する</button><br>
+                <div class = "oshitekara"><p id = "oshi">推してから何日目・・・</p></div>
+              <ul id = "event"><br><li class = "eventlist"><br>wait...<br></li><br></ul>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--タブ3枚目-->
+      <div class="tab_content" id="tab3_content">
+        <div class="tab_content_description">
+          <p class="c-txtsp">
+            <p id =  "messageforuser">wait...</p>
+            <div class="settei">
+              <h2 class = "box">お仕事</h2>
+              <h3 class="form-title">Googleカレンダー</h3>
+              <div class="container1 submitbutton">
+                <div id="form">
+                <form method = "post">
+                  <div><input type="url" id = "calenderUrl" class = "boxColor" placeholder="URL">
+                  <button onclick="doActionCalenderURL()">送信</button></div>
+                </form>
+                </div>
+              </div>
+              GoogleカレンダーURL取得方法は<a href = "https://www.afi-b.com/beginner/archives/course/course_site/11427">こちら</a>
+              <hr>
+              <hr>
+
+              <h2>推し事</h2>
+
+              <h3>オシの名前</h3>
+              <div class="container1 submitbutton">
+                <div id="form">
+                <form method = "post">
+                  <input type="text" id = "oshinoName" class = "boxColor" placeholder="名前">
+                  <button onclick="doActionOshinoName()">送信</button>
+                </form>
+                </div>
+              </div>
+
+              <h3>オシから呼ばれたい名前</h3>
+              <div class="container1 submitbutton">
+                <div id="form">
+                <form method = "post">
+                  <input type="text" id = "oshiName" class = "boxColor" placeholder="名前">
+                  <button onclick="doActionOshiName()">送信</button>
+                </form>
+                </div>
+              </div>
+
+              <hr>
+
+              <h3>オシからのメッセージ</h3>
+              <div class="container2 submitbutton2">
+                <div id="form">
+                <form method = "post">
+                  <p><label>　　応援メッセージ: <input type="text" id = "oshiMessageGanbare" class = "boxColor" placeholder="メッセージ"></label></p>
+                  <button onclick="doActionOshiMessageGanbare()">送信</button>
+                </form>
+                </div>
+                <p id = "oshi_Message"></p>
+              </div>
+
+              <div class="container2 submitbutton2">
+                <div id="form">
+                <form method = "post">
+                  <p><label>お疲れ様メッセージ: <input type="text" id = "oshiMessageOtsukare" class = "boxColor" placeholder="メッセージ"></label></p>
+                  <button onclick="doActionOshiMessageOtsukare()">送信</button>
+                </form>
+                </div>
+                <p id = "oshi_Message_otsukare"></p>
+              </div>
+
+              <hr>
+
+              <h3>オシ始めた日付</h3>
+              <div class ="container2 submitbutton3">
+                <div id="form">
+                <form method = "post">
+                  <p><label>日付: <input type="date" id = "oshiDate" ></label></p>
+                  <button onclick="doActionOshiDate()">送信</button>
+                </form>
+                </div>
+              </div>
+
+              <hr>
+
+              <h3>オシの画像保存</h3>
+              <div class = "container3">
+                <div><input type="file" name="" id="fileButton" /></div>
+                <button id="up">アップロード</button>
+                <p class = "uploadsintyoku">アップロード進捗状況</p>
+                <progress value = "0" max = "100" id = "uploader"　class = "box">0%</progress>
+                <p id = "showPercentage"　class = "box"></p>
+                <div class="disN">
+                  <button id="down">確認</button>
+                  <p class= "kakunin">確認ボタンをクリックすると、アップロードが成功している場合数秒後に画像が表示されます。</p>
+                </div>
+                <img id="oshiimage_place" src="" alt="" />
+              </div>
+
+              <hr>
+
+              <h3>背景設定</h3>
+              <h5>600px * 300px以上の画像を使用することをおすすめします！</h5>
+
+              <div class = "container4">
+                <div><input type="file" name="" id="fileButton1" /></div>
+                <button id="up1">アップロード</button>
+                <p class = "uploadsintyoku">アップロード進捗状況</p>
+                <progress value = "0" max = "100" id = "uploader1"　class = "box">0%</progress>
+                <p id = "showPercentage1"　class = "box"></p>
+                <div class="disN1">
+                  <button id="down1">確認</button>
+                  <p class = "kakunin">確認ボタンをクリックすると、アップロードが成功している場合数秒後に画像が表示されます。</p>
+                </div>
+              </div>
+              <div>
+                <img id="oshiimage_place1" src="" alt="" />
+              </div>
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!--スライドショ--->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <!--jKanbanの読み込み-->
+    <script src="jkanban-master/dist/jkanban.min.js"></script>
+
+    <!--firebase関連読み込み-->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="/__/firebase/8.9.1/firebase-app.js"></script>
+
+    <!--Authentication(認証)-->
+    <script src="/__/firebase/8.8.1/firebase-auth.js"></script>
+
+    <script src="/__/firebase/8.8.1/firebase-database.js"></script>
+
+    <script src="/__/firebase/8.8.1/firebase-storage.js"></script>
+    <!-- Initialize Firebase(初期化) -->
+    <script src="/__/firebase/init.js"></script>
+
+    <!--JavaScript-->
+    <script src = "main.js"></script>
+  </body>
+</html>

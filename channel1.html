@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="icon.ico">
+
+    <title>オタク仲間</title>
+    <link rel="stylesheet" href="jkanban-master/dist/jkanban.min.css">
+    <link rel="stylesheet" href="style_index.css">
+
+    <!--フォント読み込み-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One&display=swap" rel="stylesheet">
+
+    <!-- トーク読み込み -->
+    <!--　バージョンの互換性が高まる -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- ウェブページの概要を知らせる -->
+    <meta name="description" content="Learn how to use the Firebase platform on the Web">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Disable tap highlight on IE  タップした時に検知されていることが強調される-->
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- Web Application Manifest -->
+    <link rel="manifest" href="codelab-friendlychat-web/web-start/public/manifest.json">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Friendly Chat">
+    <meta name="theme-color" content="#303F9F">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Friendly Chat">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+
+    <!-- Tile icon for Win8 -->
+    <meta name="msapplication-TileColor" content="#3372DF">
+    <meta name="msapplication-navbutton-color" content="#303F9F">
+
+    <!-- Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+    <!-- App Styling -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="codelab-friendlychat-web/web-start/public/styles/main.css">
+  </head>
+
+  <body>
+    <div class = "contents">
+      <nav id="pushLeft">
+        <ul　class = "menu">
+          <li class="menu-item menu-item2">
+            <i class="fa fa-list-ul" aria-hidden="true"></i><b class = "menuTitle">チャンネル一覧</b>
+          </li>
+
+          <li class="menu-item channelColor menu-item2">
+            <a href = "channel1.html">
+              <ol id="list0">
+                <p class = "menuName">
+                wait...
+                </p></ol>
+            </a>
+          </li>
+
+          <li class="menu-item">
+            <a href = "channel2.html">
+              <i class="fa fa-user" aria-hidden="true"></i><ol id="list1"><p class = "menuName">wait...</p></ol>
+            </a>
+          </li>
+
+          <li class="menu-item">
+            <a href = "channel3.html">
+              <i class="fa fa-question-circle" aria-hidden="true"></i><ol id="list2"><p class = "menuName">wait...</p></ol>
+            </a>
+          </li>
+
+          <li class="menu-item">
+            <a href = "_index.html">
+              <i class="fa fa-question-circle" aria-hidden="true"></i><ol><p class = "menuName">個人ページへ</p></ol>
+            </a>
+          </li>
+
+          <li>
+            チャンネル追加
+            <form method = "post">
+              <input type="text" id = "channelName">
+              <button onclick="doAction();" class = "addchannel">Add</button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+
+
+      <div class="container">
+        <div class="containerOverlay">
+        <a href="#"></a>
+        </div>
+        <header>
+          <p class = "titleImage">
+            <img src = "red_header.png" alt = "オシゴトのアイコン"/>
+          </p>
+          <div class="headlineName" id = "authUserName">wait...</div>
+          <img class="headlineImage" id="authImage_place" src="" alt = "">
+          <a href="#pushLeft" class="pushIn">チャンネルへ</a>
+          <a href="chatindex.html" class="pushIn">チャットへ</a>
+        </header>
+
+
+        <!--タブ　https://sdesignlabo.com/web/tabmenu/-->
+        <div class="tab_container" style = "">
+          <input id="tab1" type="radio" name="tab_item" checked>
+          <label class="tab_item tab_item1" for="tab1">タスク一覧</label>
+          <input id="tab2" type="radio" name="tab_item">
+          <label class="tab_item tab_item1" for="tab2">メンバー</label>
+
+          <div class="tab_content" id="tab1_content">
+            <div id="myKanban1"></div>
+              <ol id="message1">タスクの状態が<span style= "color : #Bf2a48;">「作業中」</span>もしくは<span style = "color: #bfa12a">「終了」</span>になると、推しからのメッセージが表示されるよ！</ol>
+              <div class="balloon5">
+                <div class="faceicon">
+                  <img id="image_place" src="" class = "fade" alt = "">
+                </div>
+                <div class="chatting">
+                  <div class="says">
+                    <ol id = "message"><ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab_content" id="tab2_content">
+              <div id="myKanban2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--jKanbanの読み込み-->
+    <script src="jkanban-master/dist/jkanban.min.js"></script>
+
+    <!--firebase関連読み込み-->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="/__/firebase/8.9.1/firebase-app.js"></script>
+
+    <!--Authentication(認証)-->
+    <script src="/__/firebase/8.8.1/firebase-auth.js"></script>
+
+    <script src="/__/firebase/8.8.1/firebase-database.js"></script>
+
+    <!-- Initialize Firebase(初期化) -->
+    <script src="/__/firebase/init.js"></script>
+
+    <!-- トーク読み込み-->
+    <script src="/__/firebase/8.6.7/firebase-storage.js"></script>
+    <script src="/__/firebase/8.6.7/firebase-messaging.js"></script>
+    <script src="/__/firebase/8.6.7/firebase-firestore.js"></script>
+    <script src="/__/firebase/8.6.7/firebase-performance.js"></script>
+
+    <script src="codelab-friendlychat-web/web-start/public/scripts/main.js"></script>
+
+    <script src = "channel1.js"></script>
+  </body>
+</html>
